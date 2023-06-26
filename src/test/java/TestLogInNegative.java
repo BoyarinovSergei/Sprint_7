@@ -11,7 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.courierLogIn.request.ReqCourierLogIn;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.LOG_IN;
+import static dataForTests.URLsAndAPIs.MAIN_HOST;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
@@ -20,9 +21,10 @@ public class TestLogInNegative {
     private static String logIn;
     private static String password;
 
+
     @BeforeClass
     public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
+        RestAssured.baseURI = MAIN_HOST;
         logIn = "generateString(10)";
         password = "generateString(10)";
     }
@@ -30,7 +32,7 @@ public class TestLogInNegative {
     @Test
     @Description("Проверка на возможность выполнения log in данными курьера")
     public void successfulLogIn() {
-        makePostRequest("/api/v1/courier/login", new ReqCourierLogIn(logIn, password), null)
+        makePostRequest(LOG_IN, new ReqCourierLogIn(logIn, password))
                 .then().statusCode(404)
                 .assertThat()
                 .body("code", equalTo(404))

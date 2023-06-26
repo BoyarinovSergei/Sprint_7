@@ -8,8 +8,6 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -17,12 +15,14 @@ import pojo.orderCreation.request.ReqOrderCreation;
 
 import java.util.ArrayList;
 
-import static dataForTests.URLs.url;
+import static dataForTests.Colors.BLACK;
+import static dataForTests.Colors.GREY;
+import static dataForTests.URLsAndAPIs.GET_ORDERS;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static requestSamples.RequestSamples.makePostRequest;
 
 @RunWith(Parameterized.class)
-public class TestOrderCreationPositive {
+public class TestOrderCreationPositive extends SetDefaultURL {
 
     private ReqOrderCreation reqOrderCreation;
 
@@ -30,15 +30,15 @@ public class TestOrderCreationPositive {
     public static Object[][] getTestData() {
         return new Object[][]{
                 {new ReqOrderCreation(new ArrayList<String>() {{
-                    add("BLACK");
-                    add("GREY");
+                    add(BLACK);
+                    add(GREY);
                 }})},
                 {new ReqOrderCreation(new ArrayList<String>() {{
                     add("");
-                    add("GREY");
+                    add(GREY);
                 }})},
                 {new ReqOrderCreation(new ArrayList<String>() {{
-                    add("BLACK");
+                    add(BLACK);
                     add("");
                 }})},
                 {new ReqOrderCreation(new ArrayList<String>() {{
@@ -52,15 +52,10 @@ public class TestOrderCreationPositive {
         this.reqOrderCreation = reqOrderCreation;
     }
 
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
-
     @Test
     @Description("Проверка на возможность добавления цветов 'BLACK', 'GREY', под отдельности, вместе и не указывать цвета")
     public void successfulColorChoice() {
-        makePostRequest("/api/v1/orders", reqOrderCreation, null)
+        makePostRequest(GET_ORDERS, reqOrderCreation)
                 .then()
                 .statusCode(201)
                 .assertThat()

@@ -7,29 +7,22 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.courierCreation.request.ReqCourierCreation;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
-public class TestCourierCreationPositive {
+public class TestCourierCreationPositive extends SetDefaultURL {
 
     private String logIn;
     private String password;
     private String firstName;
-
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
 
     @Before
     @Description("Генерация данных для создания курьера")
@@ -42,8 +35,8 @@ public class TestCourierCreationPositive {
     @Test
     @Description("Создание одного курьера с корректными данными и проверка кода ответа на корректность и тела ответа")
     public void successfulCourierCreation() {
-        makePostRequest("/api/v1/courier",
-                new ReqCourierCreation(logIn, password, firstName), null)
+        makePostRequest(CREATE_COURIER,
+                new ReqCourierCreation(logIn, password, firstName))
                 .then()
                 .statusCode(201)
                 .assertThat()

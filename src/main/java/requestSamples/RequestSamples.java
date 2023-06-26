@@ -14,44 +14,47 @@ import pojo.courierLogIn.request.ReqCourierLogIn;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static dataForTests.Headers.defaultHeaders;
+import static dataForTests.URLsAndAPIs.DELETE_COURIER;
+import static dataForTests.URLsAndAPIs.LOG_IN;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class RequestSamples {
     private static String id;
 
     @Step("Make a Post request")
-    public static Response makePostRequest(String path, Object json, HashMap<String, String> customHeaders) {
+    public static Response makePostRequest(String path, Object json) {
         return RestAssured.given()
-                .headers(Optional.ofNullable(customHeaders).orElse(Headers.defaultHeaders))
+                .headers(defaultHeaders)
                 .body(json)
                 .post(path)
                 .andReturn();
     }
 
     @Step("Make a Delete request")
-    public static Response makeDeleteRequest(String path, int id, HashMap<String, String> customHeaders) {
+    public static Response makeDeleteRequest(String path, int id) {
         return RestAssured.given()
-                .headers(Optional.ofNullable(customHeaders).orElse(Headers.defaultHeaders))
+                .headers(defaultHeaders)
                 .delete(path + "" + id)
                 .andReturn();
     }
 
     @Step("Make a Get request")
-    public static Response makeGetRequest(String path, HashMap<String, String> customHeaders) {
+    public static Response makeGetRequest(String path) {
         return RestAssured.given()
-                .headers(Optional.ofNullable(customHeaders).orElse(Headers.defaultHeaders))
+                .headers(defaultHeaders)
                 .get(path)
                 .andReturn();
     }
 
     @Step("Delete a user")
     public static void deleteUser(String login, String password) {
-        id = makePostRequest(
-                "/api/v1/courier/login",
-                new ReqCourierLogIn(login, password),
-                null).getBody().path("id").toString();
+        id = makePostRequest(LOG_IN, new ReqCourierLogIn(login, password))
+                .getBody()
+                .path("id")
+                .toString();
 
-        makeDeleteRequest("api/v1/courier/", Integer.parseInt(id), null)
+        makeDeleteRequest(DELETE_COURIER, Integer.parseInt(id))
                 .then()
                 .assertThat()
                 .body("ok", equalTo(true));

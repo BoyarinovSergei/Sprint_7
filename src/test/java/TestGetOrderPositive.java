@@ -5,28 +5,21 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.orderReceiving.response.RespGetOrdersRoot;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.GET_ORDERS;
 import static requestSamples.RequestSamples.makeGetRequest;
 
-public class TestGetOrderPositive {
+public class TestGetOrderPositive extends SetDefaultURL {
 
     private RespGetOrdersRoot respGetOrdersRoot;
-
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
 
     @Test
     @Description("Получение всех заказов и проверка на наличие списка заказов")
     public void successfulCourierCreation() {
-        respGetOrdersRoot = makeGetRequest("/api/v1/orders", null)
+        respGetOrdersRoot = makeGetRequest(GET_ORDERS)
                 .as(RespGetOrdersRoot.class);
 
         Assert.assertTrue(respGetOrdersRoot.getOrders().size() > 0);
