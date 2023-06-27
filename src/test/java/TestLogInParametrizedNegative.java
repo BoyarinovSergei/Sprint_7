@@ -3,20 +3,19 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import pojo.courierLogIn.request.ReqCourierLogIn;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.LOG_IN;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
 @RunWith(Parameterized.class)
-public class TestLogInParametrizedNegative {
+public class TestLogInParametrizedNegative extends SetDefaultURL {
 
     private ReqCourierLogIn reqCourierLogIn;
 
@@ -33,18 +32,13 @@ public class TestLogInParametrizedNegative {
         this.reqCourierLogIn = reqCourierLogIn;
     }
 
-    @BeforeClass
-    public static void generateData() {
-        RestAssured.baseURI = url.get("Main host");
-    }
-
     @Test
     @Description("Проверка на невозможность авторизации без обязательных полей")
     public void unsuccessfulLogIn() {
-        makePostRequest("/api/v1/courier/login", reqCourierLogIn, null)
+        makePostRequest(LOG_IN, reqCourierLogIn)
                 .then()
                 .assertThat()
                 .body("message", equalTo("Недостаточно данных для входа"))
-                .body("code", equalTo(400));
+                .body("code", equalTo(SC_BAD_REQUEST));
     }
 }

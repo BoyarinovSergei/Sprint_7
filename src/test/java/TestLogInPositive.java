@@ -6,29 +6,25 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.courierCreation.request.ReqCourierCreation;
 import pojo.courierLogIn.request.ReqCourierLogIn;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.CREATE_COURIER;
+import static dataForTests.URLsAndAPIs.LOG_IN;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static requestSamples.RequestSamples.deleteUser;
+import static requestSamples.DeleteUsers.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
-public class TestLogInPositive {
+public class TestLogInPositive extends SetDefaultURL {
     private String logIn;
     private String password;
     private String firstName;
 
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
 
     @Before
     @Description("Генерация данных и создание курьера")
@@ -37,16 +33,16 @@ public class TestLogInPositive {
         password = generateString(10);
         firstName = generateString(10);
 
-        makePostRequest("/api/v1/courier",
-                new ReqCourierCreation(logIn, password, firstName), null);
+        makePostRequest(CREATE_COURIER,
+                new ReqCourierCreation(logIn, password, firstName));
     }
 
     @Test
     @Description("Проверка на возможность выполнения log in данными курьера")
     public void successfulLogIn() {
-        makePostRequest("/api/v1/courier/login", new ReqCourierLogIn(logIn, password), null)
+        makePostRequest(LOG_IN, new ReqCourierLogIn(logIn, password))
                 .then()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .assertThat()
                 .body("id", notNullValue());
     }

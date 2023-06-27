@@ -1,34 +1,28 @@
 /*
-* 1. Создание курьера
-* Включает проверки:
-* "нельзя создать двух одинаковых курьеров",
-* "запрос возвращает правильный код ответа",
-* "если создать пользователя с логином, который уже есть, возвращается ошибка."
-* */
+ * 1. Создание курьера
+ * Включает проверки:
+ * "нельзя создать двух одинаковых курьеров",
+ * "запрос возвращает правильный код ответа",
+ * "если создать пользователя с логином, который уже есть, возвращается ошибка."
+ * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import pojo.courierCreation.request.ReqCourierCreation;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static requestSamples.RequestSamples.deleteUser;
+import static requestSamples.DeleteUsers.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
-public class TestCourierCreationNegative {
+public class TestCourierCreationNegative extends SetDefaultURL {
     private String logIn;
     private String password;
     private String firstName;
-
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
 
     @Before
     @Description("Генерация данных для создания курьера")
@@ -41,11 +35,11 @@ public class TestCourierCreationNegative {
     @Test
     @Description("Создание двух идентичных курьеров подряд и проверка на то, что второй запрос получил в ответ предупреждение")
     public void creatingTwoIdenticalCouriers() {
-        makePostRequest("/api/v1/courier", new ReqCourierCreation(logIn, password, firstName), null);
+        makePostRequest(CREATE_COURIER, new ReqCourierCreation(logIn, password, firstName));
 
-        makePostRequest("/api/v1/courier", new ReqCourierCreation(logIn, password, firstName), null)
+        makePostRequest(CREATE_COURIER, new ReqCourierCreation(logIn, password, firstName))
                 .then()
-                .statusCode(409)
+                .statusCode(SC_CONFLICT)
                 .assertThat()
                 .body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
     }

@@ -7,24 +7,20 @@
  * */
 
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import pojo.courierCreation.request.ReqCourierCreation;
 
-import static dataForTests.URLs.url;
+import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
 @RunWith(Parameterized.class)
-public class TestCourierCreationParameterizedNegative {
+public class TestCourierCreationParameterizedNegative extends SetDefaultURL {
 
-    private static String logIn;
-    private static String password;
-    private static String firstName;
     private ReqCourierCreation reqCourierCreation;
 
     @Parameterized.Parameters
@@ -41,17 +37,12 @@ public class TestCourierCreationParameterizedNegative {
         this.reqCourierCreation = reqCourierCreation;
     }
 
-    @BeforeClass
-    public static void setUp() {
-        RestAssured.baseURI = url.get("Main host");
-    }
-
     @Test
     @Description("Создание одного курьера и проверка на то, что запрос работает только с обязательными полями {0}")
     public void creatingOneCourierWithNoAllRequiredFields() {
-        makePostRequest("/api/v1/courier", reqCourierCreation, null)
+        makePostRequest(CREATE_COURIER, reqCourierCreation)
                 .then()
-                .statusCode(400)
+                .statusCode(SC_BAD_REQUEST)
                 .assertThat()
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
