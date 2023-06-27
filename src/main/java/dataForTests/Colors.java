@@ -1,6 +1,6 @@
 package dataForTests;
 
-public interface Colors {
-    String GREY = "GREY";
-    String BLACK = "BLACK";
+public class Colors {
+    public   static  final String GREY = "GREY";
+    public  static  final String BLACK = "BLACK";
 }

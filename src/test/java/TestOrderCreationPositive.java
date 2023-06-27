@@ -7,6 +7,7 @@
  * "тело ответа содержит track.",
  * */
 
+import dataForTests.Colors;
 import io.qameta.allure.Description;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import static dataForTests.Colors.BLACK;
 import static dataForTests.Colors.GREY;
 import static dataForTests.URLsAndAPIs.GET_ORDERS;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static requestSamples.RequestSamples.makePostRequest;
 
@@ -25,6 +27,7 @@ import static requestSamples.RequestSamples.makePostRequest;
 public class TestOrderCreationPositive extends SetDefaultURL {
 
     private ReqOrderCreation reqOrderCreation;
+    private Colors colors = new Colors();
 
     @Parameterized.Parameters
     public static Object[][] getTestData() {
@@ -57,7 +60,7 @@ public class TestOrderCreationPositive extends SetDefaultURL {
     public void successfulColorChoice() {
         makePostRequest(GET_ORDERS, reqOrderCreation)
                 .then()
-                .statusCode(201)
+                .statusCode(SC_CREATED)
                 .assertThat()
                 .body("track", notNullValue());
     }

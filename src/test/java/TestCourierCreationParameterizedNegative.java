@@ -14,6 +14,7 @@ import pojo.courierCreation.request.ReqCourierCreation;
 
 import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
@@ -41,7 +42,7 @@ public class TestCourierCreationParameterizedNegative extends SetDefaultURL {
     public void creatingOneCourierWithNoAllRequiredFields() {
         makePostRequest(CREATE_COURIER, reqCourierCreation)
                 .then()
-                .statusCode(400)
+                .statusCode(SC_BAD_REQUEST)
                 .assertThat()
                 .body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }

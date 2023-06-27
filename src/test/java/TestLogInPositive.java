@@ -15,8 +15,9 @@ import pojo.courierLogIn.request.ReqCourierLogIn;
 import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static dataForTests.URLsAndAPIs.LOG_IN;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static requestSamples.RequestSamples.deleteUser;
+import static requestSamples.DeleteUsers.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
 public class TestLogInPositive extends SetDefaultURL {
@@ -41,7 +42,7 @@ public class TestLogInPositive extends SetDefaultURL {
     public void successfulLogIn() {
         makePostRequest(LOG_IN, new ReqCourierLogIn(logIn, password))
                 .then()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .assertThat()
                 .body("id", notNullValue());
     }

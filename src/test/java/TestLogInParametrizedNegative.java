@@ -10,6 +10,7 @@ import pojo.courierLogIn.request.ReqCourierLogIn;
 
 import static dataForTests.URLsAndAPIs.LOG_IN;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
@@ -38,6 +39,6 @@ public class TestLogInParametrizedNegative extends SetDefaultURL {
                 .then()
                 .assertThat()
                 .body("message", equalTo("Недостаточно данных для входа"))
-                .body("code", equalTo(400));
+                .body("code", equalTo(SC_BAD_REQUEST));
     }
 }

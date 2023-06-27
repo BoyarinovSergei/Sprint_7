@@ -11,11 +11,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pojo.courierCreation.request.ReqCourierCreation;
+import static org.apache.http.HttpStatus.*;
 
 import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static requestSamples.RequestSamples.deleteUser;
+import static requestSamples.DeleteUsers.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
 public class TestCourierCreationPositive extends SetDefaultURL {
@@ -38,7 +39,7 @@ public class TestCourierCreationPositive extends SetDefaultURL {
         makePostRequest(CREATE_COURIER,
                 new ReqCourierCreation(logIn, password, firstName))
                 .then()
-                .statusCode(201)
+                .statusCode(SC_CREATED)
                 .assertThat()
                 .body("ok", equalTo(true));
     }

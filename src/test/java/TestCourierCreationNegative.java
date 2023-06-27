@@ -14,8 +14,9 @@ import pojo.courierCreation.request.ReqCourierCreation;
 
 import static dataForTests.URLsAndAPIs.CREATE_COURIER;
 import static helper.StringGenerator.generateString;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static requestSamples.RequestSamples.deleteUser;
+import static requestSamples.DeleteUsers.deleteUser;
 import static requestSamples.RequestSamples.makePostRequest;
 
 public class TestCourierCreationNegative extends SetDefaultURL {
@@ -38,7 +39,7 @@ public class TestCourierCreationNegative extends SetDefaultURL {
 
         makePostRequest(CREATE_COURIER, new ReqCourierCreation(logIn, password, firstName))
                 .then()
-                .statusCode(409)
+                .statusCode(SC_CONFLICT)
                 .assertThat()
                 .body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
     }

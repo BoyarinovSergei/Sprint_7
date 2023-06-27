@@ -13,6 +13,7 @@ import pojo.courierLogIn.request.ReqCourierLogIn;
 
 import static dataForTests.URLsAndAPIs.LOG_IN;
 import static dataForTests.URLsAndAPIs.MAIN_HOST;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static requestSamples.RequestSamples.makePostRequest;
 
@@ -33,9 +34,9 @@ public class TestLogInNegative {
     @Description("Проверка на возможность выполнения log in данными курьера")
     public void successfulLogIn() {
         makePostRequest(LOG_IN, new ReqCourierLogIn(logIn, password))
-                .then().statusCode(404)
+                .then().statusCode(SC_NOT_FOUND)
                 .assertThat()
-                .body("code", equalTo(404))
+                .body("code", equalTo(SC_NOT_FOUND))
                 .body("message", equalTo("Учетная запись не найдена"));
     }
 }
